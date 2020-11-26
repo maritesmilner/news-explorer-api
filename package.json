@@ -1,0 +1,28 @@
+{
+  "name": "news-explorer-api",
+  "version": "1.0.0",
+  "description": "Final project at Practicum",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maritesmilner/news-explorer-api.git"
+  },
+  "author": "Marites Milner",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/maritesmilner/news-explorer-api/issues"
+  },
+  "homepage": "https://github.com/maritesmilner/news-explorer-api#readme",
+  "devDependencies": {
+    "eslint": "^7.14.0"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "mongoose": "^5.10.16"
+  }
+}
