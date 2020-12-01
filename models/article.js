@@ -13,15 +13,16 @@ const articleSchema = new mongoose.Schema({
   },
   text: {
     type: String,
-    required: true
+    required: true,
   },
   date: {
     type: String,
-    required: true
+    default: Date.now,
+    required: true,
   },
   source: {
     type: String,
-    required: true
+    required: true,
   },
   link: {
     type: String,
