@@ -23,7 +23,7 @@ exports.createUser = (req, res, next) => {
       name: req.body.name,
     }))
     .then((user) => {
-      res.status(201).send({ _id: user._id, email: user.email });
+      res.status(201).send({ _id: user._id, email: user.email, name: user.name });
     })
     .catch((err) => {
       if (err.name === 'MongoError' || err.code === 11000) {
@@ -66,9 +66,4 @@ module.exports.login = (req, res, next) => {
       // authentication error
       next(new UnauthorizedError(err.message));
     });
-};
-
-module.exports.logout = (req, res) => {
-  req.logout();
-  return res.sendStatus(200);
 };

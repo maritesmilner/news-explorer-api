@@ -14,8 +14,8 @@ module.exports.validateCreateArticle = {
     title: Joi.string().required(),
     text: Joi.string().required(),
     source: Joi.string().required(),
-    link: Joi.string().required().uri(),
-    image: Joi.string().required().uri(),
+    link: Joi.string().uri(),
+    image: Joi.string().uri(),
   }),
 };
 module.exports.validateObjectId = {

@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const helmet = require('helmet');
+const rateLimit = require("express-rate-limit");
 const cors = require('cors');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
@@ -23,6 +25,14 @@ const { PORT = 3000 } = process.env;
 const app = express();
 app.use(express.json());
 
+app.use(helmet());
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
+
 // enable the request logger before all route handlers
 app.use(requestLogger);
 
@@ -40,7 +50,6 @@ app.get('/crash-test', () => {
 
 app.post('/signup', celebrate(validateCreateUser), createUser);
 app.post('/signin', login);
-app.post('/signout', logout);
 app.use('/users', auth, users);
 app.use('/articles', auth, articles);
 

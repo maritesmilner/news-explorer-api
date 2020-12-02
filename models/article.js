@@ -27,22 +27,10 @@ const articleSchema = new mongoose.Schema({
   link: {
     type: String,
     required: false,
-    validate: {
-      validator(v) {
-        return urlRegex.test(v);
-      },
-      message: 'Please enter a valid URL.',
-    },
   },
   image: {
     type: String,
     required: false,
-    validate: {
-      validator(v) {
-        return urlRegex.test(v);
-      },
-      message: 'Please enter a valid URL.',
-    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
