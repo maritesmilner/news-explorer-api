@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "lint": "eslint controllers --fix"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,8 @@
   "homepage": "https://github.com/maritesmilner/news-explorer-api#readme",
   "devDependencies": {
     "eslint": "^7.14.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
     "jest": "^26.6.3",
     "nodemon": "^2.0.6"
   },

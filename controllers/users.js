@@ -29,7 +29,7 @@ exports.createUser = (req, res, next) => {
       if (err.name === 'MongoError' || err.code === 11000) {
         next(new BadRequestError('Email address is already in use'));
       } else {
-        next(new BadRequestError(err.message));
+        next(new BadRequestError('Data error'));
       }
     });
 };

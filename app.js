@@ -1,19 +1,19 @@
 require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
-const rateLimit = require("express-rate-limit");
+const limiter = require('./utils/limiter');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
-const { celebrate } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const auth = require('./middlewares/auth');
-const { validateCreateUser } = require('./middlewares/request-validation');
-const users = require('./routes/users');
-const articles = require('./routes/articles');
-const { createUser, login, logout } = require('./controllers/users');
+const router = require('./routes/index');
+const { devDB } = require('./utils/constants');
+const { handleError } = require('./utils/error-handler');
+const NotFoundError = require('./utils/errors/not-found-err');
 
-mongoose.connect('mongodb://localhost:27017/news-explorer', {
+const { PORT = 3000, NODE_ENV = 'dev', PROD_DB } = process.env;
+const dbName = NODE_ENV === 'production' ? PROD_DB : devDB;
+mongoose.connect(`mongodb://localhost:27017/${dbName}`, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
@@ -21,16 +21,11 @@ mongoose.connect('mongodb://localhost:27017/news-explorer', {
 });
 mongoose.set('returnOriginal', false);
 
-const { PORT = 3000 } = process.env;
 const app = express();
 app.use(express.json());
 
 app.use(helmet());
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
-});
 app.use(limiter);
 
 // enable the request logger before all route handlers
@@ -42,40 +37,21 @@ app.use(cors({
   credentials: true,
 }));
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Server will crash now');
-  }, 0);
+app.use('/api', router);
+app.all('*', function (req, res, next) {
+  next(new NotFoundError('Requested resource not found'));
 });
-
-app.post('/signup', celebrate(validateCreateUser), createUser);
-app.post('/signin', login);
-app.use('/users', auth, users);
-app.use('/articles', auth, articles);
 
 // enable error logger after route handlers
 // and before error handlers
 app.use(errorLogger);
 
-// error handlers
 app.use(errors()); // celebrate error handler
-// eslint-disable-next-line no-unused-vars
+
 app.use((err, req, res, next) => { // 4 arguments so it's recognized as an error handling middleware
-  // if an error has no status, display 500
-  const { statusCode = 500, message } = err;
-  res
-    .status(statusCode)
-    .send({
-      // check the status and display a message based on it
-      message: statusCode === 500
-        ? 'An error occurred on the server'
-        : message,
-    });
-  // do not call next() here at it triggers error -
+  handleError(err, res);
+  // do not call next() here at it will trigger error -
   // 'Cannot set headers after they are sent to the client...'
-});
-app.use((req, res) => {
-  res.status(404).send({ message: 'Requested resource not found' });
 });
 
 app.listen(PORT, () => { });
