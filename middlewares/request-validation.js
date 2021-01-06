@@ -16,7 +16,7 @@ module.exports.validateCreateArticle = {
     source: Joi.string().required(),
     link: Joi.string().uri(),
     image: Joi.string().uri(),
-  }),
+  }).unknown(true),
 };
 module.exports.validateObjectId = {
   params: Joi.object().keys({

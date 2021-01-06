@@ -1,10 +1,10 @@
 require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
-const limiter = require('./utils/limiter');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
+const limiter = require('./utils/limiter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const router = require('./routes/index');
 const { devDB } = require('./utils/constants');
@@ -33,12 +33,12 @@ app.use(requestLogger);
 
 // enable cors
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://wizardry.students.nomoreparties.site', 'https://www.wizardry.students.nomoreparties.site'],
+  origin: ['http://localhost:3000', 'https://newspin.students.nomoreparties.site', 'https://www.newspin.students.nomoreparties.site'],
   credentials: true,
 }));
 
 app.use('/api', router);
-app.all('*', function (req, res, next) {
+app.all('*', (req, res, next) => {
   next(new NotFoundError('Requested resource not found'));
 });
 
@@ -48,6 +48,7 @@ app.use(errorLogger);
 
 app.use(errors()); // celebrate error handler
 
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => { // 4 arguments so it's recognized as an error handling middleware
   handleError(err, res);
   // do not call next() here at it will trigger error -
