@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const { urlRegex } = require('../utils/constants');
 
 const articleSchema = new mongoose.Schema({
   keyword: {

@@ -8,10 +8,14 @@ module.exports.getArticles = (req, res, next) => {
 };
 
 module.exports.createArticle = (req, res, next) => {
-  const { keyword, title, text, source, link, image } = req.body;
+  const {
+    keyword, title, text, source, link, image, date,
+  } = req.body;
   const owner = req.user._id;
-  Article.create({ keyword, title, text, source, link, image, owner })
-    .then((article) => res.send({ data: article }))
+  Article.create({
+    keyword, title, text, source, link, image, owner, date,
+  })
+    .then((article) => res.status(200).send({ data: article }))
     .catch(next);
 };
 
