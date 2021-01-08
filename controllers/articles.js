@@ -33,6 +33,23 @@ module.exports.doesArticleExist = (req, res, next) => {
     .catch(next);
 };
 
+module.exports.doArticlesExist = (req, res, next) => {
+  const { id } = req.params;
+  Article.findById({ owner: id })
+    .then((articles) => {
+      if (!articles) {
+        next(new NotFoundError('No articles with matching user ID found'));
+        return;
+      }
+      res.locals.targetArticles = articles;
+      next();
+    })
+    .catch(next);
+};
+module.exports.sendArticles = (req, res) => {
+  res.send(res.locals.targetArticles);
+};
+
 module.exports.deleteArticle = (req, res, next) => {
   Article.deleteOne(res.locals.targetArticle)
     .then((result) => {
