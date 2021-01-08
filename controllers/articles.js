@@ -3,7 +3,7 @@ const NotFoundError = require('../utils/errors/not-found-err');
 
 module.exports.getArticles = (req, res, next) => {
   Article.find({})
-    .then((articles) => res.send({ data: articles }))
+    .then((articles) => res.status(200).send({ data: articles }))
     .catch(next);
 };
 
@@ -35,7 +35,7 @@ module.exports.doesArticleExist = (req, res, next) => {
 
 module.exports.doArticlesExist = (req, res, next) => {
   const { id } = req.params;
-  Article.findById({ owner: id })
+  Article.find({ owner: id })
     .then((articles) => {
       if (!articles) {
         next(new NotFoundError('No articles with matching user ID found'));
@@ -47,7 +47,7 @@ module.exports.doArticlesExist = (req, res, next) => {
     .catch(next);
 };
 module.exports.sendArticles = (req, res) => {
-  res.send(res.locals.targetArticles);
+  res.status(200).send({ data: res.locals.targetArticles });
 };
 
 module.exports.deleteArticle = (req, res, next) => {
